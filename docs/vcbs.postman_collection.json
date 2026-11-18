@@ -1,0 +1,578 @@
+{
+  "info": {
+    "name": "VCBS price board",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "description": "API công khai của bảng giá VCBS, không cần token. Socket.IO xem mục 'Socket.IO' (Postman: New > Socket.IO, client version v2)."
+  },
+  "variable": [
+    {
+      "key": "price",
+      "value": "https://vcbsprice.vcbs.com.vn"
+    },
+    {
+      "key": "api",
+      "value": "https://vcbsapi.vcbs.com.vn"
+    },
+    {
+      "key": "future",
+      "value": "41I1GB000",
+      "description": "mã phái sinh, lấy từ /pslistdata"
+    },
+    {
+      "key": "symbol",
+      "value": "HPG"
+    },
+    {
+      "key": "indexCodes",
+      "value": "10,11,02,03,31"
+    },
+    {
+      "key": "indexCode",
+      "value": "10"
+    },
+    {
+      "key": "limit",
+      "value": "200"
+    },
+    {
+      "key": "page",
+      "value": "1"
+    }
+  ],
+  "item": [
+    {
+      "name": "Socket.IO (không import được, cấu hình tay)",
+      "item": [
+        {
+          "name": "Hướng dẫn",
+          "request": {
+            "method": "GET",
+            "url": {
+              "raw": "https://vcbsprice.vcbs.com.vn/ps",
+              "host": [
+                "https://vcbsprice.vcbs.com.vn/ps"
+              ]
+            },
+            "description": "Postman: New > Socket.IO. URL: wss://vcbsprice.vcbs.com.vn/ps (namespace /ps), client version v2, transport websocket.\nGửi event 'regs' (JSON string): {\"action\":\"join\",\"data\":\"41I1GB000,41I1GB000_LS,41I1GB000_NTP,41I1GB000_TP\"}\nPing mỗi 10s event 'regs': {\"action\":\"ping\",\"mode\":\"sync\",\"data\":\" \"}\nLắng nghe event 'public' => {\"data\":{...}}."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Phái sinh / bảng giá (vcbsprice)",
+      "item": [
+        {
+          "name": "Danh sách mã phái sinh",
+          "request": {
+            "method": "GET",
+            "description": "",
+            "header": [],
+            "url": {
+              "raw": "{{price}}/pslistdata",
+              "host": [
+                "{{price}}"
+              ],
+              "path": [
+                "pslistdata"
+              ],
+              "query": []
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200 OK', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Snapshot giá",
+          "request": {
+            "method": "GET",
+            "description": "nhiều mã: ngăn cách bằng dấu phẩy",
+            "header": [],
+            "url": {
+              "raw": "{{price}}/getpsalldatalsnapshot/{{future}}",
+              "host": [
+                "{{price}}"
+              ],
+              "path": [
+                "getpsalldatalsnapshot",
+                "{{future}}"
+              ],
+              "query": []
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200 OK', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Quote cổ phiếu",
+          "request": {
+            "method": "GET",
+            "description": "",
+            "header": [],
+            "url": {
+              "raw": "{{price}}/getliststockdata/{{symbol}}",
+              "host": [
+                "{{price}}"
+              ],
+              "path": [
+                "getliststockdata",
+                "{{symbol}}"
+              ],
+              "query": []
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200 OK', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Sổ lệnh 10 bước - mua (B)",
+          "request": {
+            "method": "GET",
+            "description": "",
+            "header": [],
+            "url": {
+              "raw": "{{price}}/getps10pricesnapshot/{{future}},B",
+              "host": [
+                "{{price}}"
+              ],
+              "path": [
+                "getps10pricesnapshot",
+                "{{future}},B"
+              ],
+              "query": []
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200 OK', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Sổ lệnh 10 bước - bán (S)",
+          "request": {
+            "method": "GET",
+            "description": "",
+            "header": [],
+            "url": {
+              "raw": "{{price}}/getps10pricesnapshot/{{future}},S",
+              "host": [
+                "{{price}}"
+              ],
+              "path": [
+                "getps10pricesnapshot",
+                "{{future}},S"
+              ],
+              "query": []
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200 OK', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Chart aggregate",
+          "request": {
+            "method": "GET",
+            "description": "",
+            "header": [],
+            "url": {
+              "raw": "{{price}}/getpschart/{{future}}",
+              "host": [
+                "{{price}}"
+              ],
+              "path": [
+                "getpschart",
+                "{{future}}"
+              ],
+              "query": []
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200 OK', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Chỉ số (vcbsprice)",
+      "item": [
+        {
+          "name": "Chi tiết chỉ số",
+          "request": {
+            "method": "GET",
+            "description": "",
+            "header": [],
+            "url": {
+              "raw": "{{price}}/getlistindexdetail/{{indexCodes}}",
+              "host": [
+                "{{price}}"
+              ],
+              "path": [
+                "getlistindexdetail",
+                "{{indexCodes}}"
+              ],
+              "query": []
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200 OK', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Độ rộng thị trường (tăng/giảm)",
+          "request": {
+            "method": "GET",
+            "description": "",
+            "header": [],
+            "url": {
+              "raw": "{{price}}/adv_getlistindexdetail/{{indexCodes}}",
+              "host": [
+                "{{price}}"
+              ],
+              "path": [
+                "adv_getlistindexdetail",
+                "{{indexCodes}}"
+              ],
+              "query": []
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200 OK', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Chart chỉ số",
+          "request": {
+            "method": "GET",
+            "description": "",
+            "header": [],
+            "url": {
+              "raw": "{{price}}/getchartindexdata/{{indexCode}}",
+              "host": [
+                "{{price}}"
+              ],
+              "path": [
+                "getchartindexdata",
+                "{{indexCode}}"
+              ],
+              "query": []
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200 OK', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Phái sinh / giao dịch (vcbsapi)",
+      "item": [
+        {
+          "name": "Thông tin giao dịch phái sinh",
+          "request": {
+            "method": "GET",
+            "description": "",
+            "header": [],
+            "url": {
+              "raw": "{{api}}/pbapi/api/getFutureTradingInfo?secCode={{future}}",
+              "host": [
+                "{{api}}"
+              ],
+              "path": [
+                "pbapi",
+                "api",
+                "getFutureTradingInfo"
+              ],
+              "query": [
+                {
+                  "key": "secCode",
+                  "value": "{{future}}"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200 OK', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Lịch sử khớp lệnh (mới nhất trước)",
+          "request": {
+            "method": "GET",
+            "description": "offset là số trang, bắt đầu từ 1; phân trang có thể lệch khi đang giao dịch",
+            "header": [],
+            "url": {
+              "raw": "{{api}}/pbapi/api/stockBoard/chart/stock/{{future}}?limit={{limit}}&offset={{page}}",
+              "host": [
+                "{{api}}"
+              ],
+              "path": [
+                "pbapi",
+                "api",
+                "stockBoard",
+                "chart",
+                "stock",
+                "{{future}}"
+              ],
+              "query": [
+                {
+                  "key": "limit",
+                  "value": "{{limit}}"
+                },
+                {
+                  "key": "offset",
+                  "value": "{{page}}"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200 OK', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Khối lượng chủ động theo mức giá",
+          "request": {
+            "method": "GET",
+            "description": "",
+            "header": [],
+            "url": {
+              "raw": "{{api}}/pbapi/api/stockBoard/stock/getDetailsActivelyByPrice/{{future}}",
+              "host": [
+                "{{api}}"
+              ],
+              "path": [
+                "pbapi",
+                "api",
+                "stockBoard",
+                "stock",
+                "getDetailsActivelyByPrice",
+                "{{future}}"
+              ],
+              "query": []
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200 OK', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Đóng góp vào VN30",
+          "request": {
+            "method": "GET",
+            "description": "",
+            "header": [],
+            "url": {
+              "raw": "{{api}}/pbapi/api/Contrib?id=VN30",
+              "host": [
+                "{{api}}"
+              ],
+              "path": [
+                "pbapi",
+                "api",
+                "Contrib"
+              ],
+              "query": [
+                {
+                  "key": "id",
+                  "value": "VN30"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200 OK', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "TradingView (vcbsapi)",
+      "item": [
+        {
+          "name": "Thông tin mã",
+          "request": {
+            "method": "GET",
+            "description": "",
+            "header": [],
+            "url": {
+              "raw": "{{api}}/tradingview/api/1.1/symbols?symbol={{symbol}}",
+              "host": [
+                "{{api}}"
+              ],
+              "path": [
+                "tradingview",
+                "api",
+                "1.1",
+                "symbols"
+              ],
+              "query": [
+                {
+                  "key": "symbol",
+                  "value": "{{symbol}}"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200 OK', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Bars OHLC 1 phút",
+          "request": {
+            "method": "GET",
+            "description": "ngoài giờ giao dịch trả mảng rỗng, s=ok",
+            "header": [],
+            "url": {
+              "raw": "{{api}}/tradingview/api/1.1/history?symbol={{symbol}}&resolution=1",
+              "host": [
+                "{{api}}"
+              ],
+              "path": [
+                "tradingview",
+                "api",
+                "1.1",
+                "history"
+              ],
+              "query": [
+                {
+                  "key": "symbol",
+                  "value": "{{symbol}}"
+                },
+                {
+                  "key": "resolution",
+                  "value": "1"
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test('200 OK', () => pm.response.to.have.status(200));"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
